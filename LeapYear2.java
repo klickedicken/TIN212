@@ -26,18 +26,7 @@ public class LeapYear2 {
            if(year%4==0 && (year%100!=0 || year%400==0) && month>2){
                n=n+1;
            }
-           //if(year%4==0 && (year%100!=0 || year%400==0))
             showMessageDialog(null,"Dagens nummer är " + n);
        }
     }
 }
-
-/* Visa ruta
-gör om string till int, dagar, månader och år för sig med substring
-beräkna dagens nummer... (Hur vet man vilka månader som har olika antal dagar??)
-plus ett om skottår och innan 1 mars
-visa ruta
-
-
-
-*/
