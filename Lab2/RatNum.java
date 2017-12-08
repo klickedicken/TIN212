@@ -1,6 +1,10 @@
 import static java.lang.Math.*;
+import static java.lang.Integer.parseInt;
 
 public class RatNum{
+    public static void main(String[] args){
+        System.out.println(parse(args[0]).toString());
+    }
     //Klassvariabler
     //Klassmetoder
     public static int sgd(int m, int n){
@@ -12,17 +16,30 @@ public class RatNum{
         }
         return abs(n);
     }
+    public static RatNum parse(String s){
+        String[] b = s.split("/");
+        int m;
+        int n;
+        if (b.length > 2) throw new NumberFormatException();
+        else if (b.length == 1) {
+            m = parseInt(b[0]);
+            n = 1;
+        } 
+        else {
+            m = parseInt(b[0]);
+            n = parseInt(b[1]);
+        }      
+        return new RatNum(m,n);
+    }
     //Instansvariabler
     private int m;
     private int n;
     //Konstruktor
     public RatNum(){
-        m = 0;
-        n = 1;
+        this(0,1);
     }
     public RatNum(int a){
-        m = a;
-        n = 1;
+        this(a,1);
     }
     public RatNum(int a, int b){
         if (b == 0) throw new NumberFormatException("Denominator = 0");        
@@ -40,12 +57,21 @@ public class RatNum{
         m = r.getNumerator();
         n = r.getDenominator();
     }
+    public RatNum(String s){
+        this(parse(s));
+    }
     //Instansmetoder
     public int getNumerator(){
         return m;
     }
     public int getDenominator(){
         return n;
+    }
+    public String toString(){
+        return m + "/" + n;
+    }
+    public double toDouble(){
+        return (double) m/n;
     }
 }
 
