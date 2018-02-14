@@ -1,4 +1,3 @@
-import java.util.Random;
 import java.util.*;
 
 public class Tools{
@@ -10,7 +9,6 @@ public class Tools{
         }
         for (int i=list.length; i>0; i--){
             list[i-1] = l.remove(r.nextInt(i));
-        }
-        
+        }      
     }
 }
