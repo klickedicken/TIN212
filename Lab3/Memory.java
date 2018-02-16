@@ -7,13 +7,13 @@ import static javax.swing.JOptionPane.*;
 import static javax.swing.JLabel.*;
 
 public class Memory extends JFrame implements ActionListener { 
-    private int rows;
-    private int cols;
-    private Card[] allCards;
-    private Card[] cards;
-    private Card[] picks = new Card[2];
+    private int rows; //antal rader med kort
+    private int cols; // antal kolumner med kort
+    private Card[] allCards; // lista med alla möjliga kort
+    private Card[] cards; // lista med kort som används i nuvarande spelomgång
+    private Card[] picks = new Card[2]; // lista med de kort som är synliga för tillfället
 
-    private Player[] players;
+    private Player[] players; // lista över alla spelarpaneler som ligger till vänster i fönstret.
 
     private MenuItem newGame = new MenuItem("Nytt spel");
     private MenuItem quit = new MenuItem("Avsluta");
@@ -21,7 +21,7 @@ public class Memory extends JFrame implements ActionListener {
     private JPanel board = new JPanel();
     private JPanel scoreBoard = new JPanel();
     
-    private Timer timer;
+    private Timer timer; // låter spelaren se sina valda kort innan de försninner.
     
     private boolean active = true;
     private int[] score = new int[2];
@@ -39,7 +39,10 @@ public class Memory extends JFrame implements ActionListener {
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
-    
+   /**
+    * Lägger in alla grafisa objekt som inte kommer ändras
+    * medans programmet kör. Detta görs alltså en gång. 
+    */      
     public void initComponents() {
         setLayout(new BorderLayout());
         
@@ -48,7 +51,7 @@ public class Memory extends JFrame implements ActionListener {
 	Menu options = new Menu("Inställningar");
 
 	quit.addActionListener(this);        
-        newGame.addActionListener(this);
+    newGame.addActionListener(this);
 	playerCount.addActionListener(this);
 	
 	game.add(newGame);	game.add(quit);
@@ -57,12 +60,17 @@ public class Memory extends JFrame implements ActionListener {
 
 	setMenuBar(mb);
         
-        add(board, BorderLayout.CENTER);
-        add(scoreBoard, BorderLayout.LINE_START);        
-        timer = new Timer(0, e -> { endTurn(); });
-        timer.setRepeats(false);
-        timer.setInitialDelay(1500);
+    add(board, BorderLayout.CENTER);
+    add(scoreBoard, BorderLayout.LINE_START);        
+    timer = new Timer(0, e -> { endTurn(); });
+    timer.setRepeats(false);
+    timer.setInitialDelay(1500);
     }
+    
+   /**
+    * initAllCards länkar samman kort och bilderna i mappen mypictures. 
+    * Skapar en lista över alla möjliga kort.
+    */
     public void initAllCards(){
         File folder = new File("mypictures");
         File[] pictures = folder.listFiles();
@@ -71,20 +79,26 @@ public class Memory extends JFrame implements ActionListener {
             allCards[i] = new Card(new ImageIcon(pictures[i].getPath()));
         }
     }
+   /**
+    * Placerar ut "spelarna" till vänster i fönstret.
+    */
     private void placePlayers(){
-	int n = score.length;
-	
-	scoreBoard.setLayout(new GridLayout(n,1));
-	scoreBoard.removeAll();
-	
-	players = new Player[n];
-	
-	for(int i = 0;i < n;i++){
-	    players[i] = new Player("Player " + (i+1));
-	    scoreBoard.add(players[i]);
-	}
-	players[0].activate();
+        int n = score.length;
+        
+        scoreBoard.setLayout(new GridLayout(n,1));
+        scoreBoard.removeAll();
+        
+        players = new Player[n];
+        
+        for(int i = 0;i < n;i++){
+            players[i] = new Player("Player " + (i+1));
+            scoreBoard.add(players[i]);
+        }
+        players[0].activate();
     }
+   /**
+    * Placerar korten i panelen board, som har en rutnätslayout.
+    */
     private void placeCards(){    
         board.removeAll();
         board.setLayout(new GridLayout(rows,cols));
@@ -97,6 +111,11 @@ public class Memory extends JFrame implements ActionListener {
     public void newGame(){
 	newGame(true);
     }
+   /**
+    * Startar en ny omgång av memory. Blandar om och väljer
+    * om korten. Beroende på värdet på newBoard gör den ett 
+    * bräde med andra dimensioner. 
+    */
     public void newGame(boolean newBoard){	
         if (newBoard) setBoardSize();
         
@@ -121,6 +140,11 @@ public class Memory extends JFrame implements ActionListener {
 	repaint();
 	revalidate();
     }
+   /**
+    * Frågar användaren om önskat antal rader och kolumner. 
+    * Meddelar användaren om hen angett för höga tal eller 
+    * tal som ger ett uda antal kort.
+    */
     public void setBoardSize(){
         while (true) { 
             rows = Integer.parseInt(showInputDialog(
